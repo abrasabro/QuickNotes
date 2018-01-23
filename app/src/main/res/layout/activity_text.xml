@@ -39,10 +39,19 @@
         android:id="@+id/LoadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="136dp"
+        android:layout_marginStart="20dp"
         android:onClick="Load"
         android:text="Load"
         app:layout_constraintStart_toEndOf="@+id/SaveButton"
         tools:layout_editor_absoluteY="8dp" />
+
+    <TextView
+        android:id="@+id/filenameview"
+        android:layout_width="119dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="16dp"
+        android:text="Uninitialized"
+        app:layout_constraintStart_toEndOf="@+id/LoadButton"
+        tools:layout_editor_absoluteY="16dp" />
 
 </android.support.constraint.ConstraintLayout>

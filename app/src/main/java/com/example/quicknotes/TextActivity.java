@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -26,7 +29,13 @@ public class TextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
         mTextBox = (EditText)findViewById(R.id.editText);
-        mFileName = "default";
+        mFileName = getIntent().getStringExtra("docname");
+        Log.i("a", "name: " + mFileName);
+        if(mFileName == null) {
+            mFileName = "default";
+        }
+        ((TextView) findViewById(R.id.filenameview)).setText(mFileName);
+        Load(null);
     }
 
     public void Save (View view){
