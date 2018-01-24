@@ -1,21 +1,28 @@
 package com.example.quicknotes;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +40,6 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
         mbDeleteMode = false;
         mSharedPref = getPreferences(Context.MODE_PRIVATE);
         mDocNamesSet = mSharedPref.getStringSet("filenames", new HashSet<String>());
@@ -84,27 +90,13 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void AddDocument(View view){
-        String fileName;
-        fileName = "default";
-        if(mDocNamesSet.contains(fileName)){
-            int c;
-            for(c=1;mDocNamesSet.contains(fileName.concat(""+c));c++){
-                Log.i("a", "fileName: " + fileName);
-            }
-            fileName = fileName.concat(""+c);
-        }
-        mDocNamesSet.add(fileName);
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.remove("filenames");
-        editor.commit();
-        editor.putStringSet("filenames", mDocNamesSet);
-        editor.commit();
-        this.recreate();
+        ShowAlertDialogNew(view);
+
     }
 
     public void Delete(View view){
         View deleteButton = findViewById(R.id.deletebutton);
-        if(mbDeleteMode == false) {
+        if(!mbDeleteMode) {
             ArrayList<View> views = new ArrayList<View>();
             mGridView.findViewsWithText(views, "gridmember", FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
             for (View c : views) {
@@ -148,20 +140,84 @@ public class MenuActivity extends AppCompatActivity {
             });
         }
         findViewById(R.id.deletebutton).setBackgroundColor(0xD6D7D7);
-
+        showAlertDialogButtonClicked(view);
+    }
+    public void showAlertDialogButtonClicked(final View view) {
+        final String fileName = ((TextView) view.findViewById(R.id.filename)).getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Legit?");
-
-
-        mDocNamesSet.remove(((TextView) view.findViewById(R.id.filename)).getText());
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.remove("filenames");
-        editor.commit();
-        editor.putStringSet("filenames", mDocNamesSet);
-        editor.commit();
-        Toast.makeText(this, "DELETED", Toast.LENGTH_SHORT).show();
-
-        this.recreate();
+        builder.setMessage(getString(R.string.delete_confirmation, fileName));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                FileOutputStream outputStream;
+                try{
+                    outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+                    outputStream.write(0);
+                    outputStream.close();
+                    deleteFile(fileName);
+                    Toast.makeText(view.getContext(), "DELETED", Toast.LENGTH_SHORT).show();
+                }
+                catch(Exception e){
+                    Toast.makeText(view.getContext(), "Error deleting", Toast.LENGTH_SHORT).show();
+                }
+                mDocNamesSet.remove(fileName);
+                SharedPreferences.Editor editor = mSharedPref.edit();
+                editor.remove("filenames");
+                editor.commit();
+                editor.putStringSet("filenames", mDocNamesSet);
+                editor.commit();
+                ((Activity)view.getContext()).recreate();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                ((Activity)view.getContext()).recreate();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
+    private void ShowAlertDialogNew(final View view){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("New document name");
+
+        final EditText input = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String fileName = input.getText().toString();
+                        if(fileName.isEmpty())
+                            fileName = "default";
+                        if(mDocNamesSet.contains(fileName)){
+                            int c;
+                            for(c=1;mDocNamesSet.contains(fileName.concat(""+c));c++){
+                            }
+                            fileName = fileName.concat(""+c);
+                        }
+                        mDocNamesSet.add(fileName);
+                        SharedPreferences.Editor editor = mSharedPref.edit();
+                        editor.remove("filenames");
+                        editor.commit();
+                        editor.putStringSet("filenames", mDocNamesSet);
+                        editor.commit();
+                        ((Activity)view.getContext()).recreate();
+                    }
+                });
+
+        alertDialog.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        ((Activity)view.getContext()).recreate();
+                    }
+                });
+
+        alertDialog.show();
+    }
 }

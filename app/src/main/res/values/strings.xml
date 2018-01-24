@@ -1,4 +1,10 @@
+<!--
+<string name=""></string>
+-->
 <resources>
     <string name="app_name">Quick Notes</string>
     <string name="empty_hint">Empty</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_confirmation">Are you sure you want to delete %1$s?</string>
 </resources>

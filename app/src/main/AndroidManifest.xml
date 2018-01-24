@@ -21,9 +21,8 @@
         <activity
             android:name=".TextActivity"
             android:parentActivityName=".MenuActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".ConfirmationActivity"></activity>
     </application>
 
 </manifest>
