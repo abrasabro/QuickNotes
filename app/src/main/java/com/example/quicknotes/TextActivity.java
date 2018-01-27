@@ -3,18 +3,15 @@ package com.example.quicknotes;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,33 +25,30 @@ public class TextActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_edit);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mTextBox = (EditText)findViewById(R.id.editText);
         mFileName = getIntent().getStringExtra("docname");
-        Log.i("a", "name: " + mFileName);
-        if(mFileName == null) {
-            mFileName = "default";
-        }
-        ((TextView) findViewById(R.id.filenameview)).setText(mFileName);
-        Load(null);
+        getSupportActionBar().setTitle(mFileName);
+        load(null);
     }
 
-    public void Save (View view){
+    public void save(View view){
         FileOutputStream outputStream;
         String textBoxString = mTextBox.getText().toString();
-        Log.i("a", ""+textBoxString);
         try{
             outputStream = openFileOutput(mFileName, Context.MODE_PRIVATE);
             outputStream.write(textBoxString.getBytes());
             outputStream.close();
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
         catch(Exception e){
             Toast.makeText(this, "Error Saving", Toast.LENGTH_SHORT).show();
         }
     }
-    public void Load (View view){
+    public void load(View view){
         String content = "";
-        if (FileExists(mFileName)) {
+        if (fileExists(mFileName)) {
             try {
                 InputStream in = openFileInput(mFileName);
                 if ( in != null) {
@@ -75,8 +69,14 @@ public class TextActivity extends AppCompatActivity {
             }
         }
     }
-    private boolean FileExists(String fname){
+
+    private boolean fileExists(String fname){
         File file = getBaseContext().getFileStreamPath(fname);
         return file.exists();
+    }
+    @Override
+    protected void onDestroy() {
+        save(null);
+        super.onDestroy();
     }
 }

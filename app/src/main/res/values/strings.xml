@@ -7,4 +7,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete_confirmation">Are you sure you want to delete %1$s?</string>
+    <string name="create_new_document">New document name</string>
+    <string name="default_filename">default</string>
 </resources>
