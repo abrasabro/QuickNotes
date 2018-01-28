@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,7 +146,7 @@ public class MenuActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void delete(View view){
+    /*public void delete(View view){
         View deleteButton = findViewById(R.id.deletebutton);
         if(!mbDeleteMode) {//switch to delete mode
             ArrayList<View> views = new ArrayList<View>();
@@ -175,10 +178,10 @@ public class MenuActivity extends AppCompatActivity {
             deleteButton.invalidate();//force redrawing
             mbDeleteMode = false;
         }
-    }
+    }*/
 
     public void tapGridDelete(final View view){
-        ArrayList<View> views = new ArrayList<View>();
+        /*ArrayList<View> views = new ArrayList<View>();
         mGridView.findViewsWithText(views, "gridmember", FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
         for(View c : views){//set the onclicklistener for all documents back to normal
             c.setOnClickListener(new View.OnClickListener() {
@@ -188,9 +191,11 @@ public class MenuActivity extends AppCompatActivity {
                 }
             });
         }
-        findViewById(R.id.deletebutton).setBackgroundColor(0xD6D7D7);
+        findViewById(R.id.deletebutton).setBackgroundColor(0xD6D7D7);*/
         //get the filename associated with the button that was clicked
-        final String fileName = ((TextView) view).getText().toString();
+
+        //final String fileName = ((TextView) view).getText().toString();
+        final String fileName = ((TextView) ((ViewGroup)view.getParent()).getChildAt(0)).getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.delete_confirmation, fileName));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -244,6 +249,13 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openBottomMenu(View view){
-
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MenuActivity.this);
+        View parentView = getLayoutInflater().inflate(R.layout.menu_bottom, null);
+        bottomSheetDialog.setContentView(parentView);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) parentView.getParent());
+        bottomSheetBehavior.setPeekHeight(
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+        ((TextView) bottomSheetDialog.findViewById(R.id.filename)).setText(((TextView) ((ViewGroup)view.getParent()).getChildAt(0)).getText());
+        bottomSheetDialog.show();
     }
 }

@@ -9,26 +9,26 @@
     <TextView
         android:id="@+id/filename"
         android:layout_width="141dp"
-        android:layout_height="110dp"
+        android:layout_height="125dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/background_light"
         android:contentDescription="gridmember"
+        android:gravity="center"
         android:onClick="tapGrid"
         android:text="Uninitialized"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="46dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@android:drawable/btn_dropdown"
+        android:background="@android:drawable/ic_menu_info_details"
         android:onClick="openBottomMenu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

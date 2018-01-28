@@ -8,7 +8,7 @@
     android:layout_gravity="bottom">
 
     <TextView
-        android:id="@+id/documentname"
+        android:id="@+id/filename"
         android:layout_width="333dp"
         android:layout_height="21dp"
         android:layout_marginStart="8dp"
@@ -24,8 +24,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="Delete"
+        android:onClick="tapGridDelete"
         app:layout_constraintStart_toEndOf="@+id/buttondelete"
-        app:layout_constraintTop_toBottomOf="@+id/documentname" />
+        app:layout_constraintTop_toBottomOf="@+id/filename" />
 
     <ImageButton
         android:id="@+id/buttondelete"
@@ -33,8 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:onClick="tapGridDelete"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/documentname"
+        app:layout_constraintTop_toBottomOf="@+id/filename"
         app:srcCompat="@android:drawable/ic_delete" />
 
 </android.support.constraint.ConstraintLayout>
